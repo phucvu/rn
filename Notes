@@ -1,0 +1,3 @@
+// run emulator without android studio
+~/Library/Android/sdk/tools/emulator -list-avds
+~/Library/Android/sdk/tools/emulator -avd Pixel_API_27
