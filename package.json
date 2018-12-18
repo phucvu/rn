@@ -5,12 +5,14 @@
   "scripts": {
     "start": "react-native start",
     "test": "jest",
-    "android": "react-native run-android",
+    "android": "cd ./android && ./gradlew app:assembleDebug && ./gradlew installDebug",
     "ios": "react-native run-ios"
   },
   "dependencies": {
     "react": "16.6.1",
     "react-native": "0.57.7",
+    "react-native-navigation": "^2.2.5",
+    "react-native-vector-icons": "^6.1.0",
     "react-redux": "^6.0.0",
     "redux": "^4.0.1"
   },

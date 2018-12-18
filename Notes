@@ -2,4 +2,9 @@
 ~/Library/Android/sdk/tools/emulator -list-avds
 ~/Library/Android/sdk/tools/emulator -avd Pixel_API_27
 
-// react native debugger
+
+// search for:
+//  react native debugger
+//  react native vector icons 
+//    icon
+$npm install react-native-vector-icons --save
