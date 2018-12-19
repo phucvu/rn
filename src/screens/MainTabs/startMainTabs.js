@@ -16,20 +16,18 @@ const startTabs = () => {
                 component: {
                   name: 'awesome-places.SharePlaceScreen',
                   options: {
+                    topBar: {
+                      title: {
+                        text: 'Tab 1'
+                      }
+                    },
                     bottomTab: {
                       text: 'Tab 1',
                       icon: sources[0]
                     }
                   }
                 }
-              }],
-              options: {
-                topBar: {
-                  title: {
-                    text: 'Tab 1'
-                  }
-                }
-              }
+              }]
             }
           }, {
             stack: {
@@ -37,6 +35,11 @@ const startTabs = () => {
                 component: {
                   name: 'awesome-places.FindPlaceScreen',
                   options: {
+                    topBar: {
+                      title: {
+                        text: 'Tab 2'
+                      }
+                    },
                     bottomTab: {
                       text: 'Tab 2',
                       icon: sources[1],
@@ -44,14 +47,7 @@ const startTabs = () => {
                     }
                   }
                 }
-              }],
-              options: {
-                topBar: {
-                  title: {
-                    text: 'Tab 2'
-                  }
-                }
-              }
+              }]
             }
           }]
         }
