@@ -1,86 +1,64 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import { Navigation } from 'react-native-navigation';
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TextInput, Button} from 'react-native';
-import { connect } from 'react-redux';
+import { Provider } from 'react-redux';
 
-import PlaceInput from './src/components/PlaceInput/PlaceInput';
-import PlaceList from './src/components/PlaceList/PlaceList';
-import PlaceDetail from './src/components/PlaceDetail/PlaceDetail';
-import { 
-  addPlace, deletePlace, selectPlace, deselectPlace 
-} from './src/store/action/index';
+import AuthScreen from './src/screens/Auth/Auth';
+import SharePlaceScreen from './src/screens/SharePlace/SharePlace';
+import FindPlaceScreen from './src/screens/FindPlace/FindPlace';
 
-const instructions = Platform.select({
-  ios: 
-    'Press Cmd+R to reload,\n' + 
-    'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
+import configureStore from './src/store/configureStore';
+
+const store = configureStore();
+
+// Register screens
+Navigation.registerComponentWithRedux(
+  'awesome-places.AuthScreen',
+  () => AuthScreen,
+  Provider,
+  store
+);
+Navigation.registerComponentWithRedux(
+  'awesome-places.SharePlaceScreen',
+  () => SharePlaceScreen,
+  Provider,
+  store
+);
+Navigation.registerComponentWithRedux(
+  'awesome-places.FindPlaceScreen',
+  () => FindPlaceScreen,
+  Provider,
+  store
+);
+
+// Start a App
+// nav v1
+// Navigation.startSingleScreenApp({
+//   screen: {
+//     screen: "awesome-places.AuthScreen",
+//     title: "Login"
+//   }
+// });
+
+// nav v2
+Navigation.events().registerAppLaunchedListener(() => {
+  Navigation.setRoot({
+    root: {
+      stack: {
+        children: [
+          {
+            component: {
+              name: 'awesome-places.AuthScreen'
+            }
+          }
+        ],
+        options: {
+          topBar: {
+            title: {
+              text: 'Login'
+            }
+          }
+        }
+      }
+    }
+  });
 });
-
-class App extends Component{
-  placeAddedHandler = placeName => {
-    this.props.onAddPlace(placeName);
-  };
-  
-  placeDeletedHandler = () => {
-    this.props.onDeletePlace();
-  };
-
-  modalClosedHandler = () => {
-    this.props.onDeselectPlace();
-  };
-
-  placeSelectedHandler = key => {
-    this.props.onSelectPlace(key);
-  };
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <PlaceDetail 
-          selectedPlace={this.props.selectedPlace} 
-          onItemDeleted={this.placeDeletedHandler}
-          onModalClosed={this.modalClosedHandler} />
-        <PlaceInput onPlaceAdded={this.placeAddedHandler} />
-        <PlaceList places={this.props.places} onItemSelected={this.placeSelectedHandler} />
-      </View>
-    );
-  }
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 32,
-    backgroundColor: '#fff',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
-  }
-});
-
-const mapStateToProps = state => {
-  return {
-    places: state.places.places,
-    selectedPlace: state.places.selectedPlace
-  }
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onAddPlace: name => dispatch(addPlace(name)),
-    onDeletePlace: () => dispatch(deletePlace()),
-    onSelectPlace: key => dispatch(selectPlace(key)),
-    onDeselectPlace: () => dispatch(deselectPlace())
-  }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
