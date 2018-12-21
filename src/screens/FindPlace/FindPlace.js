@@ -7,6 +7,36 @@ import { Navigation } from 'react-native-navigation';
 import PlaceList from '../../components/PlaceList/PlaceList';
 
 class FindPlace extends Component {
+  static options(passProps) {
+    return {
+      topBar: {
+        leftButtons: [
+          {
+            id: 'buttonOne',
+            text: 'ABC'
+          }
+        ]
+      }
+    };
+  }
+
+  constructor(props) {
+    super(props);
+    Navigation.events().bindComponent(this); // <== Will be automatically unregistered when unmounted
+  }
+
+  navigationButtonPressed({ buttonId }) {
+    if (buttonId === 'buttonOne') {
+      Navigation.mergeOptions('navigation.drawer.left', {
+        sideMenu: {
+          left: {
+            visible: true
+          }
+        }
+      });
+    }
+  }
+
   itemSelectedHandler = key => {
     const selPlace = this.props.places.find(place => {
       return place.key === key;
