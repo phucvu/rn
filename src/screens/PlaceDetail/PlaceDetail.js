@@ -21,7 +21,6 @@ class PlaceDetail extends Component {
   }
 
   updateStyles = (dims) => {
-    console.log(this.state.viewMode);
     this.setState({
       viewMode: dims.window.height > 500 ? "portrait" : "landscape"
     });

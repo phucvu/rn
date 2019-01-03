@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image } from 'react-native';
+import { Platform, View, Text, TextInput, Button, StyleSheet, ScrollView, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
 import { addPlace } from '../../store/action/index';
+
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import PlaceInput from '../../components/PlaceInput/PlaceInput';
 import MainText from '../../components/UI/MainText/MainText';
 import HeadingText from '../../components/UI/HeadingText/HeadingText';
 import PickImage from '../../components/PickImage/PickImage';
 import PickLocation from '../../components/PickLocation/PickLocation';
-
 
 class SharePlace extends Component {
   state = {
@@ -34,9 +35,28 @@ class SharePlace extends Component {
     Navigation.events().bindComponent(this); // <== Will be automatically unregistered when unmounted
   };
 
+  componentDidMount() {
+    // load icon to react native navigation using icon... 
+    Promise.all([
+      Icon.getImageSource(Platform.OS === 'android' ? "md-menu" : "ios-menu", 30)
+    ]).then( sources => {
+      Navigation.mergeOptions(this.props.componentId, {
+        topBar: {
+          leftButtons: [
+            {
+              id: 'buttonOne',
+              text: 'ABC',
+              icon: sources[0]
+            }
+          ]
+        }
+      });
+    })
+  }
+
   navigationButtonPressed({ buttonId }) {
     if (buttonId === 'buttonOne') {
-      Navigation.mergeOptions('navigation.drawer.left', {
+      Navigation.mergeOptions(this.props.componentId, {
         sideMenu: {
           left: {
             visible: true

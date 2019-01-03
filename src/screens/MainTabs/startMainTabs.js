@@ -33,7 +33,8 @@ const startTabs = () => {
                         },
                         bottomTab: {
                           text: 'Tab 1',
-                          icon: sources[0]
+                          icon: sources[0],
+                          selectedIconColor: 'blue'
                         }
                       }
                     }
@@ -53,6 +54,7 @@ const startTabs = () => {
                         bottomTab: {
                           text: 'Tab 2',
                           icon: sources[1],
+                          selectedIconColor: 'blue',
                           testID: 'SECOND_TAB_BAR_BUTTON'
                         }
                       }
