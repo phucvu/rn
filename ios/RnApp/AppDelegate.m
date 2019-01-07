@@ -17,6 +17,8 @@
   NSURL *jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   [ReactNativeNavigation bootstrap:jsCodeLocation launchOptions:launchOptions];
   
+//  [GMSServices provideAPIKey:@"AIzaSyDUaGU05JXGw2l-2SVx-rw_V9DpExqOkQE"]; // add this line using the api key obtained from Google Console
+  
   return YES;
 }
 
