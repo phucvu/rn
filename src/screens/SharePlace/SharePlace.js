@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, Text, TextInput, Button, StyleSheet, ScrollView, Image } from 'react-native';
+import { Platform, View, Text, TextInput, Button, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
 import { addPlace } from '../../store/action/index';
@@ -139,6 +139,20 @@ class SharePlace extends Component {
   }
 
   render () {
+    let submitButton = (<Button 
+      title="Share a Place" 
+      onPress={this.placeAddedHandler} 
+      disabled={
+        !this.state.controls.placeName.valid || 
+        !this.state.controls.location.valid ||
+        !this.state.controls.image.valid
+      }
+    />);
+
+    if (this.props.isLoading)  {
+      submitButton = <ActivityIndicator />;
+    }
+
     return (
       <ScrollView>
         <View style={styles.container}>
@@ -153,15 +167,7 @@ class SharePlace extends Component {
             onChangeText={this.placeNameChangeHandler} 
           />
           <View style={styles.button}>
-            <Button 
-              title="Share a Place" 
-              onPress={this.placeAddedHandler} 
-              disabled={
-                !this.state.controls.placeName.valid || 
-                !this.state.controls.location.valid ||
-                !this.state.controls.image.valid
-              }
-            />
+            {submitButton}
           </View>
         </View>
       </ScrollView>
@@ -190,10 +196,17 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = state => {
   return {
-    onAddPlace: (placeName, location, image) => dispatch(addPlace(placeName, location, image))
-  }
+    isLoading: state.ui.isLoading
+  };
 };
 
-export default connect(null, mapDispatchToProps)(SharePlace);
+const mapDispatchToProps = dispatch => {
+  return {
+    onAddPlace: (placeName, location, image) =>
+      dispatch(addPlace(placeName, location, image))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SharePlace);
