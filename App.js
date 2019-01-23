@@ -44,8 +44,7 @@ Navigation.registerComponentWithRedux(
   store
 );
 
-
-Navigation.events().registerAppLaunchedListener(() => {
+export default () => Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
     root: {
       stack: {
