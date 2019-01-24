@@ -39,7 +39,13 @@ class FindPlace extends Component {
   }
 
   componentDidMount() {
+  }
+
+  componentDidAppear() {
     this.props.onLoadPlaces();
+    // this.setState({
+    //   placesLoaded: false
+    // });
   }
 
   navigationButtonPressed({ buttonId }) {

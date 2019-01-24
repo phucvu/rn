@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Platform, View, Text, TextInput, Button, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Navigation } from 'react-native-navigation';
-import { addPlace } from '../../store/action/index';
+
+import { addPlace, startAddPlace } from '../../store/action/index';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -14,27 +15,6 @@ import PickLocation from '../../components/PickLocation/PickLocation';
 import validate from '../../utility/validation';
 
 class SharePlace extends Component {
-  state = {
-    controls: {
-      placeName: {
-        value: "",
-        valid: false,
-        touched: false,
-        validationRules: {
-          notEmpty: true
-        }
-      },
-      location: {
-        value: null,
-        valid: false
-      },
-      image: {
-        value: null,
-        valid: false
-      }
-    }
-  };
-  
   static options(passProps) {
     return {
       topBar: {
@@ -48,10 +28,49 @@ class SharePlace extends Component {
     };
   };
 
+  reset = () => {
+    this.setState({
+      controls: {
+        placeName: {
+          value: "",
+          valid: false,
+          touched: false,
+          validationRules: {
+            notEmpty: true
+          }
+        },
+        location: {
+          value: null,
+          valid: false
+        },
+        image: {
+          value: null,
+          valid: false
+        }
+      }
+    })
+  };
+
   constructor(props) {
     super(props);
     Navigation.events().bindComponent(this); // <== Will be automatically unregistered when unmounted
   };
+
+  componentWillMount() {
+    this.reset();
+  }
+
+  componentDidUpdate() {
+    if (this.props.placeAdded) {
+      Navigation.mergeOptions(this.props.componentId, {
+        bottomTabs: {
+          currentTabIndex: 1
+        }
+      });
+
+      this.props.onStartAddPlace();
+    }
+  }
 
   componentDidMount() {
     // load icon to react native navigation using icon... 
@@ -129,13 +148,16 @@ class SharePlace extends Component {
   }
 
   placeAddedHandler = () => {
-    if (this.state.controls.placeName.value.trim() !== '') {
+    console.log("this.state.placeName.value", this.state.controls.image.value);
+    
       this.props.onAddPlace(
         this.state.controls.placeName.value,
         this.state.controls.location.value,
         this.state.controls.image.value
       );
-    }
+      this.reset();
+      this.imagePicker.reset();
+      this.locationPicker.reset();
   }
 
   render () {
@@ -159,9 +181,12 @@ class SharePlace extends Component {
           <MainText> 
             <HeadingText>Share a Place with us!!</HeadingText> 
           </MainText>
-          <PickImage onImagePicked={this.imagePickedHandler} />
+          <PickImage 
+            onImagePicked={this.imagePickedHandler} 
+            ref={ref => this.imagePicker = ref} />
           <PickLocation 
-            onLocationPick={this.locationPickedHandler} />
+            onLocationPick={this.locationPickedHandler}
+            ref={ref => this.locationPicker = ref} />
           <PlaceInput
             placeData={this.state.controls.placeName} 
             onChangeText={this.placeNameChangeHandler} 
@@ -198,14 +223,16 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    isLoading: state.ui.isLoading
+    isLoading: state.ui.isLoading,
+    placeAdded: state.places.placeAdded
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onAddPlace: (placeName, location, image) =>
-      dispatch(addPlace(placeName, location, image))
+      dispatch(addPlace(placeName, location, image)),
+    onStartAddPlace: () => dispatch(startAddPlace())
   };
 };
 

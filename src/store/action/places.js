@@ -1,5 +1,11 @@
-import { SET_PLACES, DELETE_PLACE } from './actionTypes';
+import { SET_PLACES, DELETE_PLACE, PLACE_ADDED, START_ADD_PLACE } from './actionTypes';
 import { uiStartLoading, uiStopLoading, authGetToken } from './index';
+
+export const startAddPlace = () => {
+  return {
+    type: START_ADD_PLACE
+  }
+};
 
 export const addPlace = (placeName, location, image) => {
   return dispatch => {
@@ -27,22 +33,32 @@ export const addPlace = (placeName, location, image) => {
           alert("Something went wrong, please try again!");
           dispatch(uiStopLoading());
       })
-      .then(res => res.json())
+      .then(res => {
+        console.log(res)
+        return res.json();
+
+        // if (res.ok) {
+        //   return res.json();
+        // } else {
+        //   throw(new Error());
+        // }
+      })
       .then(parsedRes => {
-          const placeData = {
-              name: placeName,
-              location: location,
-              image: parsedRes.imageUrl
-          };
-          return fetch("https://awesome-places-1546831277287.firebaseio.com/places.json?auth=" + authToken, {
-              method: "POST",
-              body: JSON.stringify(placeData)
-          });
+        const placeData = {
+            name: placeName,
+            location: location,
+            image: parsedRes.imageUrl
+        };
+        return fetch("https://awesome-places-1546831277287.firebaseio.com/places.json?auth=" + authToken, {
+            method: "POST",
+            body: JSON.stringify(placeData)
+        });
       })
       .then(res => res.json())
       .then(parsedRes => {
-          console.log(parsedRes);
+          console.log('parsed::', parsedRes);
           dispatch(uiStopLoading());
+          dispatch(placeAdded());
       })
       .catch(err => {
         console.log(err);
@@ -52,6 +68,11 @@ export const addPlace = (placeName, location, image) => {
   };
 };
 
+export const placeAdded = () => {
+  return {
+    type: PLACE_ADDED
+  }
+};
 
 export const getPlaces = () => {
   return (dispatch) => {
@@ -62,7 +83,7 @@ export const getPlaces = () => {
       .catch( () => {
         alert('No valid token found!')
       })
-      .then( res => res.json())
+      .then(res => res.json())
       .then( parsedRes => {
         const places = []
         for (let key in parsedRes) {
