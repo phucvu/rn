@@ -148,16 +148,14 @@ class SharePlace extends Component {
   }
 
   placeAddedHandler = () => {
-    console.log("this.state.placeName.value", this.state.controls.image.value);
-    
-      this.props.onAddPlace(
-        this.state.controls.placeName.value,
-        this.state.controls.location.value,
-        this.state.controls.image.value
-      );
-      this.reset();
-      this.imagePicker.reset();
-      this.locationPicker.reset();
+    this.props.onAddPlace(
+      this.state.controls.placeName.value,
+      this.state.controls.location.value,
+      this.state.controls.image.value
+    );
+    // this.reset();
+    // this.imagePicker.reset();
+    // this.locationPicker.reset();
   }
 
   render () {

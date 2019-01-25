@@ -17,7 +17,7 @@ export const addPlace = (placeName, location, image) => {
       })
       .then(token => {
         authToken = token;
-        console.log(authToken);
+        console.log("upload image: authToken", authToken);
         return fetch("https://us-central1-awesome-places-f04c4.cloudfunctions.net/storeImage", {
           method: "POST",
           body: JSON.stringify({
@@ -47,7 +47,8 @@ export const addPlace = (placeName, location, image) => {
         const placeData = {
             name: placeName,
             location: location,
-            image: parsedRes.imageUrl
+            image: parsedRes.imageUrl,
+            imagePath: parsedRes.imagePath
         };
         return fetch("https://awesome-places-1546831277287.firebaseio.com/places.json?auth=" + authToken, {
             method: "POST",
